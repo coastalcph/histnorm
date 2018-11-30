@@ -8,7 +8,8 @@ available under the [CC BY-SA 4.0
 license](https://creativecommons.org/licenses/by-sa/4.0/).
 
 The original dataset is in one-token-per-line format with added
-beginning-of-word and end-of-work markers, as well as individual characters
+beginning-of-word and end-of-word markers, as well as individual characters
 separated by spaces.  To keep in line with the format of the other datasets, the
-version in this repo "undoes" these preprocessing decisions, but is otherwise
-identical to it.
+version in this repo "undoes" these preprocessing decisions.
+
+
