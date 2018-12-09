@@ -16,13 +16,10 @@ def cer(words):
            for (gold, norm) in words]
     return val
 
-def main(args):
-    stemmer, vocab = None, None
+def main(args, stemmer=None):
+    vocab = None
     if args.trainfile:
         vocab = set((line.strip().split("\t")[0] for line in args.trainfile))
-    if args.stem:
-        import Stemmer
-        stemmer = Stemmer.Stemmer(args.stem)
 
     data = []
     for refline, normline in zip(args.reffile, args.normfile):
@@ -72,7 +69,7 @@ if __name__ == "__main__":
                         metavar='LANGUAGE',
                         type=str,
                         help=('Stem word forms before evaluation; '
-                              'LANGUAGE is a lower-case language name (e.g., "english")'))
+                              'LANGUAGE is a language name (e.g., "english")'))
     parser.add_argument('-i', '--only-incorrect',
                         action='store_true',
                         default=False,
@@ -96,5 +93,13 @@ if __name__ == "__main__":
         parser.error("can't select both --only-knowns and --only-unknowns")
     if (args.only_knowns or args.only_unknowns) and not args.trainfile:
         parser.error("--only-knowns/--only-unknowns requires TRAINFILE")
+    stemmer = None
+    if args.stem:
+        import Stemmer
+        try:
+            stemmer = Stemmer.Stemmer(args.stem.lower())
+        except KeyError:
+            parser.error("No stemming algorithm for '{}'; valid choices are: {}".format(
+                args.stem, ", ".join(Stemmer.algorithms())))
 
-    main(args)
+    main(args, stemmer=stemmer)
