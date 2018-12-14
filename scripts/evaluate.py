@@ -38,10 +38,14 @@ def main(args, stemmer=None):
             gold, norm = stemmer.stemWords([gold, norm])
         data.append((gold, norm))
 
+    if args.print:
+        for gold, norm in data:
+            print("{}\t{}".format(gold, norm))
+        return
+
     print("       Tokens: {:d}".format(len(data)))
     if not data:
         return
-
     acc = accuracy(data)
     print("Word accuracy: {:.4f}".format(sum(acc) / len(acc)))
     err = cer(data)
@@ -84,6 +88,10 @@ if __name__ == "__main__":
                         default=False,
                         help=('Only evaluate on the subset of unknown/out-of-vocabulary '
                               'tokens; requires TRAINFILE'))
+    parser.add_argument('--print',
+                        action='store_true',
+                        default=False,
+                        help=('Print the data that will be compared'))
     if len(sys.argv) < 2:
         parser.print_help()
         exit(1)
