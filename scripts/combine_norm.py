@@ -19,26 +19,40 @@ def main(args):
 
 
 if __name__ == "__main__":
-    description = ("Combine predictions from two systems based on whether the source token "
-                   "was seen during training or not.")
+    description = (
+        "Combine predictions from two systems based on whether the source token "
+        "was seen during training or not."
+    )
     epilog = ""
     parser = argparse.ArgumentParser(description=description, epilog=epilog)
-    parser.add_argument('reffile',
-                        metavar='REFFILE',
-                        type=argparse.FileType('r', encoding="UTF-8"),
-                        help='Reference normalizations in two-column format')
-    parser.add_argument('trainfile',
-                        metavar='TRAINFILE',
-                        type=argparse.FileType('r', encoding="UTF-8"),
-                        help='Training file in two-column format')
-    parser.add_argument('knownfile',
-                        metavar='NORMFILE_KNOWN',
-                        type=argparse.FileType('r', encoding="UTF-8"),
-                        help=('Predicted normalizations that should be used for known (in-vocabulary) tokens'))
-    parser.add_argument('unkfile',
-                        metavar='NORMFILE_UNKNOWN',
-                        type=argparse.FileType('r', encoding="UTF-8"),
-                        help=('Predicted normalizations that should be used for unknown (out-of-vocabulary) tokens'))
+    parser.add_argument(
+        "reffile",
+        metavar="REFFILE",
+        type=argparse.FileType("r", encoding="UTF-8"),
+        help="Reference normalizations in two-column format",
+    )
+    parser.add_argument(
+        "trainfile",
+        metavar="TRAINFILE",
+        type=argparse.FileType("r", encoding="UTF-8"),
+        help="Training file in two-column format",
+    )
+    parser.add_argument(
+        "knownfile",
+        metavar="NORMFILE_KNOWN",
+        type=argparse.FileType("r", encoding="UTF-8"),
+        help=(
+            "Predicted normalizations that should be used for known (in-vocabulary) tokens"
+        ),
+    )
+    parser.add_argument(
+        "unkfile",
+        metavar="NORMFILE_UNKNOWN",
+        type=argparse.FileType("r", encoding="UTF-8"),
+        help=(
+            "Predicted normalizations that should be used for unknown (out-of-vocabulary) tokens"
+        ),
+    )
     args = parser.parse_args()
 
     main(args)

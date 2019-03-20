@@ -4,17 +4,22 @@ import argparse
 import stringdist
 import sys
 
+
 def accuracy(words):
     """Word accuracy"""
     val = [gold == norm for (gold, norm) in words]
     return val
 
+
 def cer(words):
     """Character error rate (CER), defined as Levenshtein distance normalized by
        reference word length."""
-    val = [(0 if gold == norm else stringdist.levenshtein(gold, norm) / len(gold)) \
-           for (gold, norm) in words]
+    val = [
+        (0 if gold == norm else stringdist.levenshtein(gold, norm) / len(gold))
+        for (gold, norm) in words
+    ]
     return val
+
 
 def main(args, stemmer=None):
     vocab = None
@@ -51,47 +56,76 @@ def main(args, stemmer=None):
     err = cer(data)
     print("  Average CER: {:.4f}".format(sum(err) / len(err)))
 
+
 if __name__ == "__main__":
-    description = ("Evaluate normalization quality.")
+    description = "Evaluate normalization quality."
     epilog = ""
     parser = argparse.ArgumentParser(description=description, epilog=epilog)
-    parser.add_argument('reffile',
-                        metavar='REFFILE',
-                        type=argparse.FileType('r', encoding="UTF-8"),
-                        help='Reference normalizations in two-column format')
-    parser.add_argument('normfile',
-                        metavar='NORMFILE',
-                        type=argparse.FileType('r', encoding="UTF-8"),
-                        help=('Predicted normalizations; can be one- or two-column'
-                              ' (with normalizations expected in second column)'))
-    parser.add_argument('trainfile',
-                        metavar='TRAINFILE',
-                        type=argparse.FileType('r', encoding="UTF-8"),
-                        nargs='?',
-                        help='Training file in two-column format; required for some options')
-    parser.add_argument('-s', '--stem',
-                        metavar='LANGUAGE',
-                        type=str,
-                        help=('Stem word forms before evaluation; '
-                              'LANGUAGE is a language name (e.g., "english")'))
-    parser.add_argument('-i', '--only-incorrect',
-                        action='store_true',
-                        default=False,
-                        help='Only evaluate on the subset of incorrect normalizations')
-    parser.add_argument('-k', '--only-knowns',
-                        action='store_true',
-                        default=False,
-                        help=('Only evaluate on the subset of known/in-vocabulary tokens;'
-                              ' requires TRAINFILE'))
-    parser.add_argument('-u', '--only-unknowns',
-                        action='store_true',
-                        default=False,
-                        help=('Only evaluate on the subset of unknown/out-of-vocabulary '
-                              'tokens; requires TRAINFILE'))
-    parser.add_argument('--print',
-                        action='store_true',
-                        default=False,
-                        help=('Print the data that will be compared'))
+    parser.add_argument(
+        "reffile",
+        metavar="REFFILE",
+        type=argparse.FileType("r", encoding="UTF-8"),
+        help="Reference normalizations in two-column format",
+    )
+    parser.add_argument(
+        "normfile",
+        metavar="NORMFILE",
+        type=argparse.FileType("r", encoding="UTF-8"),
+        help=(
+            "Predicted normalizations; can be one- or two-column"
+            " (with normalizations expected in second column)"
+        ),
+    )
+    parser.add_argument(
+        "trainfile",
+        metavar="TRAINFILE",
+        type=argparse.FileType("r", encoding="UTF-8"),
+        nargs="?",
+        help="Training file in two-column format; required for some options",
+    )
+    parser.add_argument(
+        "-s",
+        "--stem",
+        metavar="LANGUAGE",
+        type=str,
+        help=(
+            "Stem word forms before evaluation; "
+            'LANGUAGE is a language name (e.g., "english")'
+        ),
+    )
+    parser.add_argument(
+        "-i",
+        "--only-incorrect",
+        action="store_true",
+        default=False,
+        help="Only evaluate on the subset of incorrect normalizations",
+    )
+    parser.add_argument(
+        "-k",
+        "--only-knowns",
+        action="store_true",
+        default=False,
+        help=(
+            "Only evaluate on the subset of known/in-vocabulary tokens;"
+            " requires TRAINFILE"
+        ),
+    )
+    parser.add_argument(
+        "-u",
+        "--only-unknowns",
+        action="store_true",
+        default=False,
+        help=(
+            "Only evaluate on the subset of unknown/out-of-vocabulary "
+            "tokens; requires TRAINFILE"
+        ),
+    )
+    parser.add_argument(
+        "--print",
+        action="store_true",
+        default=False,
+        help=("Print the data that will be compared"),
+    )
     if len(sys.argv) < 2:
         parser.print_help()
         exit(1)
@@ -104,10 +138,14 @@ if __name__ == "__main__":
     stemmer = None
     if args.stem:
         import Stemmer
+
         try:
             stemmer = Stemmer.Stemmer(args.stem.lower())
         except KeyError:
-            parser.error("No stemming algorithm for '{}'; valid choices are: {}".format(
-                args.stem, ", ".join(Stemmer.algorithms())))
+            parser.error(
+                "No stemming algorithm for '{}'; valid choices are: {}".format(
+                    args.stem, ", ".join(Stemmer.algorithms())
+                )
+            )
 
     main(args, stemmer=stemmer)
