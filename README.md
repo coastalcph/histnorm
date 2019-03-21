@@ -94,3 +94,20 @@ Can you even generate normalizations otherwise??
 *Training used to be kind of awkward; required changing values in a Python
 script before calling a series of commands, but I think recent cSMTiser version
 changed that.  Check with newest cSMTiser; older scripts are in `_dump` folder*
+
+
+## License
+
+All software (in the `scripts/` directory) is provided under the [MIT
+License](scripts/LICENSE).
+
+Licenses for the datasets differ.  The German Anselm data is licensed under [CC
+BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).  The German RIDGES
+data is licensed under [CC BY
+3.0](https://creativecommons.org/licenses/by-sa/3.0/).  The Icelandic data is
+licensed under [GNU LGPL v3](https://opensource.org/licenses/LGPL-3.0).  The
+Slovene data is licensed under [CC BY-SA
+4.0](https://creativecommons.org/licenses/by-sa/4.0/).  The other datasets
+unfortunately do not indicate a license, but the rights holders have indicated
+that the resource is "free" for research purposes.  Please see the READMEs
+included in each dataset subdirectory for more details.
