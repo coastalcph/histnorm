@@ -16,7 +16,13 @@ splits.
 
 ## Anselm
 
-This dataset has not been made public so far.
+This dataset comes from a preliminary version of the [Anselm
+Corpus](https://www.linguistics.rub.de/anselm/access/index.en.html), meaning
+that the data found in the released version of the corpus might differ slightly
+from that reproduced here.
 
-We are in the process of obtaining permission to redistribute the Anselm dataset
-and are hopeful that we can include it for the final version.
+The dataset is based on 46 texts of the corpus.  For each text, the first 1,000
+tokens are used for the dev set, the next 1,000 tokens for the test set, and the
+remainder for the training set.  For more detailed information, see [Bollmann,
+2018,
+Sec. 3.1.2](https://www.linguistics.rub.de/forschung/arbeitsberichte/22.pdf#page=57).
