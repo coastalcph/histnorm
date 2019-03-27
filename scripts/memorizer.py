@@ -3,6 +3,7 @@
 import argparse
 from collections import Counter
 
+
 def load_memo(memofile):
     lexicon = {}
     for line in memofile:
@@ -78,14 +79,19 @@ if __name__ == "__main__":
         help="Input data to normalize",
     )
     sub.add_argument(
-        "-f", "--frequency",
+        "-f",
+        "--frequency",
         action="store_true",
         default=False,
         help="Additionally output how often the normalized token was seen during training",
     )
     sub.set_defaults(func=apply_)
 
-    sub = subparsers.add_parser("combine", help="Combine memorization with other learned predictions", description="This will output the learned memorization whenever possible, and the corresponding prediction from a supplied file whenever the input token is not in the memorization lexicon.")
+    sub = subparsers.add_parser(
+        "combine",
+        help="Combine memorization with other learned predictions",
+        description="This will output the learned memorization whenever possible, and the corresponding prediction from a supplied file whenever the input token is not in the memorization lexicon.",
+    )
     sub.add_argument(
         "memofile",
         metavar="MEMOFILE",
