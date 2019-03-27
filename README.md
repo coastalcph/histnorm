@@ -245,4 +245,4 @@ included in each dataset subdirectory for more details.
 For questions or problems, feel free to file a GitHub issue, or contact me
 directly:
 
-+ Marcel Bollmann <marcel@bollmann.me>
++ Marcel Bollmann (<marcel@bollmann.me>)
