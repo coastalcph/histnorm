@@ -31,7 +31,18 @@ further, but the [HistCorp](http://stp.lingfil.uu.se/histcorp/tools.html)
 website contains instructions on how to obtain the same dataset splits.
 
 
+## Helpful Scripts
+
+The [`scripts/`](scripts/) directory contains a collection of scripts that was
+used in the process of running the normalization experiments in Bollmann (2019).
+This includes **preprocessing** scripts, **evaluation** and **significance
+testing** scripts, and more.  For more details, please see the [README file in
+the scripts/ folder](scripts/README.md).
+
+
 ## Tools
+
+The following tools are evaluated in Bollmann (2019):
 
 + [Norma](https://github.com/comphist/norma), described in [Bollmann
   (2012)](https://marcel.bollmann.me/pub/acrh12.pdf)
@@ -41,10 +52,10 @@ website contains instructions on how to obtain the same dataset splits.
   (2018)](http://www.linguistics.rub.de/forschung/arbeitsberichte/22.pdf)
 + [cSMTiser](https://github.com/clarinsi/csmtiser) (wrapping Moses)
 
-The following instructions assume that the data files are provided in the same
-format as contained in this repository; i.e., as tab-separated text files where
-the first column contains a historical word form and the second column contains
-its normalization.
+The detailed instructions below assume that the data files are provided in the
+same format as contained in this repository; i.e., as tab-separated text files
+where the first column contains a historical word form and the second column
+contains its normalization.
 
 ### Using Norma
 
@@ -54,26 +65,25 @@ your system before it can be used.  Detailed instructions for this can be found
 
 To use Norma, you need to:
 
-1. Prepare a configuration file; you can use the [recommended configuration
+1. **Prepare a configuration file;** you can use the [recommended configuration
    file](examples/norma.cfg), but should adjust the filenames given inside.
 
-2. Prepare a lexicon of contemporary word forms.  You can use the contemporary
-   datasets provided here for this purpose, and create a lexicon file with the
-   following command (example given for German):
+2. **Prepare a lexicon of contemporary word forms.** You can use the
+   contemporary datasets provided here for this purpose, and create a lexicon
+   file with the following command (example given for German):
 
        norma_lexicon -w datasets/modern/combined.de.uniq -a lexicon.de.fsm -l lexicon.de.sym -c
 
    Make sure that the names of the lexicon files match what is given in your
    `norma.cfg` before you start training.
 
-Data files for Norma need to be in two-column, tab-separated format.  To train a
-new model, use:
+Data files for Norma need to be in two-column, tab-separated format.  To **train
+a new model,** use:
 
     normalize -c norma.cfg -f datasets/historical/german/german-anselm.train.txt -s -t --saveonexit
 
-The names of the saved model files are defined in `norma.cfg`.
-
-Generating normalizations:
+The names of the saved model files are defined in `norma.cfg`.  **Generating
+normalizations** is done via:
 
 ```bash
 normalize -c norma.cfg -f datasets/historical/german/german-anselm.dev.txt -s > german-anselm.predictions
@@ -86,7 +96,7 @@ framework](https://github.com/marian-nmt/marian-dev) and clone [the
 normalization-NMT repository](https://github.com/tanggongbo/normalization-NMT)
 on your local machine.  You then need to:
 
-1. Preprocess the input to be in separate source/target files with
+1. **Preprocess the input** to be in separate source/target files with
    whitespace-separated characters.  This format can be easily generated as
    follows:
 
@@ -98,17 +108,17 @@ on your local machine.  You then need to:
    This will create the preprocessed input files (named `train.src`,
    `train.trg`, etc.) in the `preprocessed/` subdirectory.
 
-2. Edit the `train_seq2seq.sh` script that comes with normalization-NMT to point
-   to the correct paths (for Marian and the preprocessed input), as well as
-   adjust the GPU memory settings and device ID to the correct values for your
-   system.  As an example, check out [the modified script used for the
+2. **Edit the `train_seq2seq.sh` script** that comes with normalization-NMT to
+   point to the correct paths (for Marian and the preprocessed input), as well
+   as adjust the GPU memory settings and device ID to the correct values for
+   your system.  As an example, check out [the modified script used for the
    experiments in Bollmann (2019)](examples/train_seq2seq.sh).
 
-Then, training the model is as simple as calling:
+Then, **training the model** is as simple as calling:
 
     bash train_seq2seq.sh
 
-Generating normalizations is best done by calling `marian-decoder` directly,
+**Generating normalizations** is best done by calling `marian-decoder` directly,
 like this:
 
 ```bash
@@ -139,16 +149,16 @@ then issuing `git checkout 6557ee8`.
 
 To use XNMT, you need to:
 
-1. Preprocess the input to be in separate source/target files with
+1. **Preprocess the input** to be in separate source/target files with
    whitespace-separated characters (the same as for Marian):
 
    ```bash
    scripts/convert_to_charseq.py datasets/historical/german/german-anselm.{train,test,dev}.txt --to preprocessed
    ```
 
-2. Edit [the example configuration file](examples/xnmt-config.yaml) by replacing
-   the `<<TMPDIR>>` string with the path to your preprocessed input files; for
-   example:
+2. **Edit [the example configuration file](examples/xnmt-config.yaml)** by
+   replacing the `<<TMPDIR>>` string with the path to your preprocessed input
+   files; for example:
 
    ```bash
    sed -i 's|<<TMPDIR>>|./preprocessed|g' examples/xnmt-config.yaml
@@ -157,7 +167,7 @@ To use XNMT, you need to:
    For very small datasets, you might also want to increase the patience value
    (find the line that says `patience: 5` and adjust it).
 
-Afterwards, you can train the model by calling:
+Afterwards, you can **train the model** by calling:
 
     PYTHONHASHSEED=0 python3 -m xnmt.xnmt_run_experiments xnmt-config.yaml --dynet-seed 0 --dynet--gpu
 
@@ -171,7 +181,7 @@ cSMTiser requires an installation of Moses and MGIZA.  Detailed instructions can
 be found [in the cSMTiser repository](https://github.com/clarinsi/csmtiser).  To
 use it, you need to:
 
-1. Preprocess the input to be in separate orig/norm files.  There is a bash
+1. **Preprocess the input** to be in separate orig/norm files.  There is a bash
    script to achieve this that has the same argument structure as the script for
    XNMT and Marian above:
 
@@ -180,7 +190,7 @@ use it, you need to:
    scripts/convert_to_orignorm.sh datasets/historical/german/german-anselm.{train,test,dev}.txt --to preprocessed
    ```
 
-2. Edit [the example configuration file](examples/csmtiser-config.yaml) by
+2. **Edit [the example configuration file](examples/csmtiser-config.yaml)** by
    replacing the `<<TMPDIR>>` string with the path to your preprocessed input
    files; for example:
 
@@ -196,15 +206,15 @@ use it, you need to:
    line in the configuration file that says `lms: []` and replace it with (e.g.)
    `lms: [datasets/modern/combined.de.uniq]`.
 
-Afterwards, training your cSMTiser model requires the following two commands
-(from the cSMTiser directory):
+Afterwards, **training the model** requires the following two commands (from the
+cSMTiser directory):
 
 ```bash
 python preprocess.py csmtiser-config.yaml
 python train.py csmtiser-config.yaml
 ```
 
-Generating normalizations is achieved by calling:
+**Generating normalizations** is achieved by calling:
 
 ```bash
 python normalise.py csmtiser-config.yaml preprocessed/test.orig
@@ -229,3 +239,10 @@ Slovene data is licensed under [CC BY-SA
 unfortunately do not indicate a license, but the rights holders have indicated
 that the resource is "free" for research purposes.  Please see the READMEs
 included in each dataset subdirectory for more details.
+
+## Contact
+
+For questions or problems, feel free to file a GitHub issue, or contact me
+directly:
+
++ Marcel Bollmann <marcel@bollmann.me>

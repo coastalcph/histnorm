@@ -1,17 +1,44 @@
 # Auxiliary scripts for historical text normalization
 
-This directory contains the following general-purpose scripts:
+The scripts in this directory are mostly based on **Python 3.** The required
+packages are listed in `requirements.txt` and can be installed via `pip install
+-r requirements.txt`.
+
+**As a general rule, all scripts offer the `-h/--help` flag for detailed
+instructions on how to use them.**
+
+
+## General-purpose scripts
 
 - `preprocess.py`: Implements all preprocessing steps for historical datasets,
-  such as lowercasing, punctuation removal, etc.
+  such as lowercasing, punctuation removal, etc.  To produce the same
+  preprocessing as in Bollmann (2019), run the script with the `--all` flag:
 
-- `evaluate.py`:
-  Performs evaluation of word accuracy and character error rate,
-  optionally with stemming or restricted to incorrect/seen/unseen tokens
+      ./preprocess.py --all train.txt
 
-- `significance.py`:
-  Computes statistical significance of word accuracy between two
-  predicted normalizations
+  If you want more fine-grained control, the script also offers plenty of
+  command-line options (that you can list via `-h/--help`).
+
+- `evaluate.py`: Performs evaluation of word accuracy and character error rate,
+  optionally with stemming or restricted to incorrect/seen/unseen tokens.  For
+  example, to evaluate normalization quality based on word stems on
+  out-of-vocabulary tokens only, you could use:
+
+      ./evaluate.py -i --stem english english.test.txt english.pred english.train.txt
+
+- `significance.py`: Computes statistical significance of word accuracy between
+  two predicted normalizations.
+
+- `split_sample.py`: Splits an input file into *n* samples, either randomly or
+  in continuous blocks.  Can be used to recreate the training curves found in
+  Bollmann (2019); e.g., the following command would produce the ten training
+  sets used in the "100 tokens" setting:
+
+      ./split_sample.py -c -n 10 -s 100 german-anselm.train.txt german-anselm-100
+
+  The last argument specifies a prefix for the output files; the training sets
+  in this case would be named `german-anselm-100_1`, `german-anselm-100_2`, and
+  so on.
 
 
 ## Preprocessing for specific tools
@@ -35,6 +62,7 @@ The following scripts were used to extract data from the Europarl v7 corpus:
 
 - `europarl_convert_extracted.bash`:
   Utility script to convert the extracted excerpts into a full-form wordlist
+
 
 ## License
 
