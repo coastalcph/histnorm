@@ -1,6 +1,16 @@
 # Historical Text Normalization
 Compiled tools, datasets, and other resources for historical text normalization.
 
+The resources provided here have originally been used in the following
+publications:
+
++ Marcel Bollmann. 2018. [Normalization of Historical Texts with Neural Network
+  Models](http://www.linguistics.rub.de/forschung/arbeitsberichte/22.pdf). *Bochumer
+  Linguistische Arbeitsberichte*, 22.
+
++ Marcel Bollmann. 2019. A Large-Scale Comparison of Historical Text
+  Normalization Systems. In *Proceedings of NAACL-HLT 2019.*
+
 
 ## Datasets
 
@@ -38,36 +48,72 @@ its normalization.
 
 ### Using Norma
 
-**TODO: Installation**
+Norma (and at least one of its dependencies) needs to be compiled manually on
+your system before it can be used.  Detailed instructions for this can be found
+[in the Norma repository](https://github.com/comphist/norma).
 
-**TODO: Provide config file**
+To use Norma, you need to:
 
-Generating a lexicon file:
+1. Prepare a configuration file; you can use the [recommended configuration
+   file](/norma.cfg), but should adjust the filenames given inside.
 
-    norma_lexicon -w <wordlist> -a lexicon.fst -l lexicon.sym -c
+2. Prepare a lexicon of contemporary word forms.  You can use the contemporary
+   datasets provided here for this purpose, and create a lexicon file with the
+   following command (example given for German):
 
-Training:
+       norma_lexicon -w datasets/modern/combined.de.uniq -a lexicon.de.fsm -l lexicon.de.sym -c
 
-    normalize -c <configfile> -f <trainfile> -s -t --saveonexit
+   Make sure that the names of the lexicon files match what is given in your
+   `norma.cfg` before you start training.
+
+Data files for Norma need to be in two-column, tab-separated format.  To train a
+new model, use:
+
+    normalize -c norma.cfg -f datasets/historical/german/german-anselm.train.txt -s -t --saveonexit
+
+The names of the saved model files are defined in `norma.cfg`.
 
 Generating normalizations:
 
-    normalize -c <configfile> -f <evalfile> -s > <predictions>
-
+```bash
+normalize -c norma.cfg -f datasets/historical/german/german-anselm.dev.txt -s > german-anselm.predictions
+```
 
 ### Using Marian
 
-**TODO: Installation**
+You need to install the [Marian
+framework](https://github.com/marian-nmt/marian-dev) and clone [the
+normalization-NMT repository](https://github.com/tanggongbo/normalization-NMT)
+on your local machine.  The latter comes with a `train_seq2seq.sh` script that
+**needs to be edited** (mainly with respect to paths to Marian and your data
+files, but potentially also your GPU memory and device ID) before you can use
+it.
 
-**TODO: customize train_seq2seq.sh**
+Marian requires separate files for source (historical) and target (normalized)
+input, and characters need to be separated by whitespace.  This format can be
+easily generated as follows:
 
-Training:
+    scripts/convert_to_charseq.py datasets/historical/german/german-anselm.{train,test,dev}.txt --to preprocessed
+
+This will create the preprocessed input files (named `train.src`, `train.trg`,
+etc.) in the `preprocessed/` subdirectory.  Make sure that the respective
+variables in `train_seq2seq.sh` point to these files.  Then, training the model
+is as simple as navigating to the `normalization-NMT` directory and calling:
 
     bash train_seq2seq.sh
 
-Generating normalizations:
+Generating normalizations is best done by calling `marian-decoder` directly,
+like this:
 
-    cut -f1 <evalfile> | <path-to-marian>/marian-decoder -c <modeldir>/model.npz.best-perplexity.npz.decoder.yaml -m <modeldir>/model.npz.best-perplexity.npz --quiet-translation --device 0 --mini-batch 16 --maxi-batch 100 --maxi-batch-sort src -w 10000 --beam-size 5 | sed 's/ //g' > <predictions>
+```bash
+cat preprocessed/dev.src | $MARIAN_PATH/marian-decoder -c $MODELDIR/model.npz.best-perplexity.npz.decoder.yaml -m $MODELDIR/model.npz.best-perplexity.npz --quiet-translation --device 0 --mini-batch 16 --maxi-batch 100 --maxi-batch-sort src -w 10000 --beam-size 5 | sed 's/ //g' > german-anselm.predictions
+```
+
+Marian outputs predictions in the same format as the input files, i.e. with
+whitespace-separated characters, which is why we pipe it through `sed 's/ //g'`
+to obtain the regular representations.  You can skip this part, of course, but
+it's required if you want to use the evaluation scripts supplied here and/or
+compare with the other normalization methods.
 
 
 ### Using XNMT

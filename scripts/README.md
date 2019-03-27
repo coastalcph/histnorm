@@ -13,6 +13,12 @@ This directory contains the following scripts:
   Computes statistical significance of word accuracy between two
   predicted normalizations
 
+Some scripts are only relevant for certain normalization tools:
+
+- `convert_to_charseq.py`: Converts the two-column, tab-separated format found
+  in this repo to separate source/target files with characters separated by
+  whitespace.  This is the required input format for some normalization tools.
+
 
 ## Contemporary data
 

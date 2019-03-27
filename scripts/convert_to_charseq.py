@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-"""Usage: preprocess.py TRAIN [TEST [DEV]] --to DIRECTORY
+"""Usage: convert_to_charseq.py TRAIN [TEST [DEV]] --to DIRECTORY
 
-Prepares parallel two-column text files for use with xnmt-norm.
+Prepares parallel two-column text files for use with XNMT or Marian.
 
 Options:
   -h, --help         Show this helpful text.
