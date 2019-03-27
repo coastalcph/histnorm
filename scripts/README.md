@@ -17,7 +17,11 @@ Some scripts are only relevant for certain normalization tools:
 
 - `convert_to_charseq.py`: Converts the two-column, tab-separated format found
   in this repo to separate source/target files with characters separated by
-  whitespace.  This is the required input format for some normalization tools.
+  whitespace.  This is the required input format for XNMT and Marian.
+
+- `convert_to_orignorm.sh`: Converts the two-column, tab-separated format found
+  in this repo to separate source/target files ending in `.orig` and `.norm`.
+  This is the required input format for the cSMTiser/Moses toolchain.
 
 
 ## Contemporary data

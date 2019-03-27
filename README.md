@@ -8,7 +8,7 @@ publications:
   Models](http://www.linguistics.rub.de/forschung/arbeitsberichte/22.pdf). *Bochumer
   Linguistische Arbeitsberichte*, 22.
 
-+ Marcel Bollmann. 2019. A Large-Scale Comparison of Historical Text
++ Marcel Bollmann. 2019 (to appear). A Large-Scale Comparison of Historical Text
   Normalization Systems. In *Proceedings of NAACL-HLT 2019.*
 
 
@@ -167,11 +167,47 @@ This both trains and evaluates; the final predictions will be stored as
 
 ### Using cSMTiser
 
-**TODO: Installation**
+cSMTiser requires an installation of Moses and MGIZA.  Detailed instructions can
+be found [in the cSMTiser repository](https://github.com/clarinsi/csmtiser).  To
+use it, you need to:
 
-*Training used to be kind of awkward; required changing values in a Python
-script before calling a series of commands, but I think recent cSMTiser version
-changed that.  Check with newest cSMTiser; older scripts are in `_dump` folder*
+1. Preprocess the input to be in separate orig/norm files.  There is a bash
+   script to achieve this that has the same argument structure as the script for
+   XNMT and Marian above:
+
+   ```bash
+   mkdir preprocessed
+   scripts/convert_to_orignorm.sh datasets/historical/german/german-anselm.{train,test,dev}.txt --to preprocessed
+   ```
+
+2. Edit [the example configuration file](examples/csmtiser-config.yaml) by
+   replacing the `<<TMPDIR>>` string with the path to your preprocessed input
+   files; for example:
+
+   ```bash
+   sed -i 's|<<TMPDIR>>|preprocessed|g' examples/csmtiser-config.yaml
+   ```
+
+   Likewise, you should replace `<<MODELDIR>>` with the desired output directory
+   (absolute path!) for your trained model, and `<<MOSESDIR>>` with the path to
+   your local Moses installation.
+
+Afterwards, training your cSMTiser model requires the following two commands
+(from the cSMTiser directory):
+
+```bash
+python preprocess.py csmtiser-config.yaml
+python train.py csmtiser-config.yaml
+```
+
+Generating normalizations is achieved by calling:
+
+```bash
+python normalise.py csmtiser-config.yaml preprocessed/test.orig
+```
+
+The predicted normalizations will, in this case, be written to
+`preprocessed/test.orig.norm`.
 
 
 ## License
