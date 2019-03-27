@@ -192,6 +192,10 @@ use it, you need to:
    (absolute path!) for your trained model, and `<<MOSESDIR>>` with the path to
    your local Moses installation.
 
+   To **add the contemporary data for language modelling** (optional), find the
+   line in the configuration file that says `lms: []` and replace it with (e.g.)
+   `lms: [datasets/modern/combined.de.uniq]`.
+
 Afterwards, training your cSMTiser model requires the following two commands
 (from the cSMTiser directory):
 
