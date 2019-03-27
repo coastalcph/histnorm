@@ -1,15 +1,23 @@
 # Historical Text Normalization
-Compiled tools, datasets, and other resources for historical text normalization.
+*Compiled tools, datasets, and other resources for historical text normalization.*
 
 The resources provided here have originally been used in the following
-publications:
+publication:
+
++ Marcel Bollmann. 2019 (to appear). A Large-Scale Comparison of Historical Text
+  Normalization Systems. In *Proceedings of NAACL-HLT 2019.*
+
+If you use an original part of this repository (such as the provided scripts or
+the previously unpublished dataset splits), I would appreciate if you cite the
+above-mentioned publication.  If you use one of the referenced datasets and/or
+tools, please remember to (also) cite these accordingly.
+
+For further reading, a lot of additional details and background information can
+also be found in:
 
 + Marcel Bollmann. 2018. [Normalization of Historical Texts with Neural Network
   Models](http://www.linguistics.rub.de/forschung/arbeitsberichte/22.pdf). *Bochumer
   Linguistische Arbeitsberichte*, 22.
-
-+ Marcel Bollmann. 2019 (to appear). A Large-Scale Comparison of Historical Text
-  Normalization Systems. In *Proceedings of NAACL-HLT 2019.*
 
 
 ## Datasets
@@ -40,6 +48,37 @@ testing** scripts, and more.  For more details, please see the [README file in
 the scripts/ folder](scripts/README.md).
 
 
+## TL;DR: The Recommended Normalization Approach
+
+In most cases, you want to combine a naive memorization baseline (for
+in-vocabulary tokens) with a good, trained model (for out-of-vocabulary tokens).
+
++ If you have little training data (<500 tokens), you probably want to use the
+  Norma tool (which already includes a naive memorization component); see
+  *"Using Norma"* for details.
+
++ Otherwise, the results from Bollmann (2019) suggest using cSMTiser as the
+  trained model in this scenario; see below under *"Using cSMTiser"*.
+
+The naive memorization component can be trained as follows:
+
+    scripts/memorizer.py train german-lexicon.txt german-anselm.train.txt
+
+Apply it via:
+
+    scripts/memorizer.py apply german-lexicon.txt german-anselm.dev.txt > dev.memo.pred
+
+To combine naive memorization with a trained model (for out-of-vocabulary
+tokens), first train and apply one of the normalizers discussed below.  If the
+predictions of that trained model are in `dev.model.pred`, you can then apply
+this combined strategy via:
+
+    scripts/memorizer.py combine german-lexicon.txt dev.model.pred german-anselm.dev.txt
+
+This will output a new prediction file that returns the learned memorization if
+possible, and the corresponding line from `dev.model.pred` otherwise.
+
+
 ## Tools
 
 The following tools are evaluated in Bollmann (2019):
@@ -56,6 +95,7 @@ The detailed instructions below assume that the data files are provided in the
 same format as contained in this repository; i.e., as tab-separated text files
 where the first column contains a historical word form and the second column
 contains its normalization.
+
 
 ### Using Norma
 
@@ -80,14 +120,15 @@ To use Norma, you need to:
 Data files for Norma need to be in two-column, tab-separated format.  To **train
 a new model,** use:
 
-    normalize -c norma.cfg -f datasets/historical/german/german-anselm.train.txt -s -t --saveonexit
+    normalize -c norma.cfg -f german-anselm.train.txt -s -t --saveonexit
 
 The names of the saved model files are defined in `norma.cfg`.  **Generating
 normalizations** is done via:
 
 ```bash
-normalize -c norma.cfg -f datasets/historical/german/german-anselm.dev.txt -s > german-anselm.predictions
+normalize -c norma.cfg -f german-anselm.dev.txt -s > german-anselm.predictions
 ```
+
 
 ### Using Marian
 
@@ -102,7 +143,7 @@ on your local machine.  You then need to:
 
    ```bash
    mkdir preprocessed
-   scripts/convert_to_charseq.py datasets/historical/german/german-anselm.{train,test,dev}.txt --to preprocessed
+   scripts/convert_to_charseq.py german-anselm.{train,test,dev}.txt --to preprocessed
    ```
 
    This will create the preprocessed input files (named `train.src`,
@@ -153,7 +194,7 @@ To use XNMT, you need to:
    whitespace-separated characters (the same as for Marian):
 
    ```bash
-   scripts/convert_to_charseq.py datasets/historical/german/german-anselm.{train,test,dev}.txt --to preprocessed
+   scripts/convert_to_charseq.py german-anselm.{train,test,dev}.txt --to preprocessed
    ```
 
 2. **Edit [the example configuration file](examples/xnmt-config.yaml)** by
@@ -187,7 +228,7 @@ use it, you need to:
 
    ```bash
    mkdir preprocessed
-   scripts/convert_to_orignorm.sh datasets/historical/german/german-anselm.{train,test,dev}.txt --to preprocessed
+   scripts/convert_to_orignorm.sh german-anselm.{train,test,dev}.txt --to preprocessed
    ```
 
 2. **Edit [the example configuration file](examples/csmtiser-config.yaml)** by

@@ -39,6 +39,9 @@ instructions on how to use them.**
   The last argument specifies a prefix for the output files; the training sets
   in this case would be named `english-split_1`, `english-split_2`, and so on.
 
+- **`memorizer.py`**: A naive memorization normalizer, equivalent to Norma's
+  Mapper component, but as a simple Python script.
+
 
 ## Preprocessing for specific tools
 
