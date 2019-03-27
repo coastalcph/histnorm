@@ -39,7 +39,7 @@ model-ensemble3: !Experiment
     run_for_epochs: 1000
     lr_decay: 0.01
     lr_decay_times: 0
-    patience: <<PATIENCE>>
+    patience: 5
 
     src_file: "<<TMPDIR>>/train.src"
     trg_file: "<<TMPDIR>>/train.trg"
@@ -53,16 +53,9 @@ model-ensemble3: !Experiment
   evaluate: &evaluate
     - !AccuracyEvalTask
       eval_metrics: accuracy
-      src_file: "/home/ubuntu/data/xnmt/hist/<<DATASET>>/dev.orig"
-      ref_file: "/home/ubuntu/data/xnmt/hist/<<DATASET>>/dev.norm"
-      hyp_file: "<<TMPDIR>>/full_dev.norm"
+      src_file: "<<TMPDIR>>/dev.src"
+      ref_file: "<<TMPDIR>>/dev.trg"
+      hyp_file: "<<TMPDIR>>/dev.predictions"
       inference: !SimpleInference
         search_strategy: !BeamSearch
           beam_size: 5
-#    - !AccuracyEvalTask
-#      eval_metrics: bleu
-#      src_file: "/home/ubuntu/data/xnmt/hist/<<DATASET>>/test.orig"
-#      ref_file: "/home/ubuntu/data/xnmt/hist/<<DATASET>>/test.norm"
-#      hyp_file: "<<TMPDIR>>/full_test.norm"
-#      inference: !SimpleInference
-#        beam: 5

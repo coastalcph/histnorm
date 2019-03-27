@@ -1,14 +1,14 @@
 #!/bin/bash
 
-# this file is used to train RNN seq2seq models, 
-# you need to adjust the paths and related parameters 
-# especially when you train subword-level models, 
+# this file is used to train RNN seq2seq models,
+# you need to adjust the paths and related parameters
+# especially when you train subword-level models,
 # you need change vocabulary setting "--max-size"
 
 RNN=tanh # or lstm, gru
 
 DATASET=char
-DATADIR=~/data/tmp_for_marian/
+DATADIR=./preprocessed/
 MARIAN=~/code/marian
 
 TRAIN_SRC=$DATADIR/train.src
@@ -16,7 +16,7 @@ TRAIN_TRG=$DATADIR/train.trg
 DEV_SRC=$DATADIR/dev.src
 DEV_TRG=$DATADIR/dev.trg
 
-MODEL_DIR=~/models/marian/_tmp
+MODEL_DIR=./models/marian/
 rm -rf $MODEL_DIR
 mkdir -p $MODEL_DIR
 
@@ -37,7 +37,7 @@ then
     cat $TRAIN_SRC $TRAIN_TRG | $MARIAN/build/marian-vocab --max-size 200 > ${MODEL_DIR}/vocab.ende.yml
 fi
 
-# train model, you need to change the value of "devices" 
+# train model, you need to change the value of "devices"
 $MARIAN/build/marian \
     --model ${MODEL_DIR}/model.npz --type s2s \
     --enc-cell $RNN --dec-cell $RNN \

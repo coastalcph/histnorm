@@ -55,7 +55,7 @@ your system before it can be used.  Detailed instructions for this can be found
 To use Norma, you need to:
 
 1. Prepare a configuration file; you can use the [recommended configuration
-   file](/norma.cfg), but should adjust the filenames given inside.
+   file](examples/norma.cfg), but should adjust the filenames given inside.
 
 2. Prepare a lexicon of contemporary word forms.  You can use the contemporary
    datasets provided here for this purpose, and create a lexicon file with the
@@ -84,21 +84,27 @@ normalize -c norma.cfg -f datasets/historical/german/german-anselm.dev.txt -s > 
 You need to install the [Marian
 framework](https://github.com/marian-nmt/marian-dev) and clone [the
 normalization-NMT repository](https://github.com/tanggongbo/normalization-NMT)
-on your local machine.  The latter comes with a `train_seq2seq.sh` script that
-**needs to be edited** (mainly with respect to paths to Marian and your data
-files, but potentially also your GPU memory and device ID) before you can use
-it.
+on your local machine.  You then need to:
 
-Marian requires separate files for source (historical) and target (normalized)
-input, and characters need to be separated by whitespace.  This format can be
-easily generated as follows:
+1. Preprocess the input to be in separate source/target files with
+   whitespace-separated characters.  This format can be easily generated as
+   follows:
 
-    scripts/convert_to_charseq.py datasets/historical/german/german-anselm.{train,test,dev}.txt --to preprocessed
+   ```bash
+   mkdir preprocessed
+   scripts/convert_to_charseq.py datasets/historical/german/german-anselm.{train,test,dev}.txt --to preprocessed
+   ```
 
-This will create the preprocessed input files (named `train.src`, `train.trg`,
-etc.) in the `preprocessed/` subdirectory.  Make sure that the respective
-variables in `train_seq2seq.sh` point to these files.  Then, training the model
-is as simple as navigating to the `normalization-NMT` directory and calling:
+   This will create the preprocessed input files (named `train.src`,
+   `train.trg`, etc.) in the `preprocessed/` subdirectory.
+
+2. Edit the `train_seq2seq.sh` script that comes with normalization-NMT to point
+   to the correct paths (for Marian and the preprocessed input), as well as
+   adjust the GPU memory settings and device ID to the correct values for your
+   system.  As an example, check out [the modified script used for the
+   experiments in Bollmann (2019)](examples/train_seq2seq.sh).
+
+Then, training the model is as simple as calling:
 
     bash train_seq2seq.sh
 
@@ -118,19 +124,45 @@ compare with the other normalization methods.
 
 ### Using XNMT
 
-**TODO: Installation**
+XNMT is based on Python 3.6 and DyNet.  You can find detailed instructions on
+how to install it [in the "Getting Started" section of the
+documentation](https://xnmt.readthedocs.io/en/latest/getting_started.html).
 
-**TODO: provide config file**
+Since XNMT is new software that is changing quickly, and there was no tagged
+release at the time of my experiments, **it is possible that the newest version
+is not compatible with the exact scripts and instructions provided here.** For
+reference, the experiments performed in Bollmann (2019) are based on [XNMT
+commit
+6557ee8](https://github.com/neulab/xnmt/tree/6557ee8ef8e39a8936035d8aa9ae1c8576d3734d).
+You can obtain this exact version of the code by cloning the XNMT repository and
+then issuing `git checkout 6557ee8`.
 
-commit 6557ee8ef8e39a8936035d8aa9ae1c8576d3734d
+To use XNMT, you need to:
 
-Training:
+1. Preprocess the input to be in separate source/target files with
+   whitespace-separated characters (the same as for Marian):
 
-    PYTHONHASHSEED=0 python3 -m xnmt.xnmt_run_experiments <configfile> --dynet-seed 0 --dynet--gpu
+   ```bash
+   scripts/convert_to_charseq.py datasets/historical/german/german-anselm.{train,test,dev}.txt --to preprocessed
+   ```
 
-(dev predictions during training are saved in `full_dev.norm`)
+2. Edit [the example configuration file](examples/xnmt-config.yaml) by replacing
+   the `<<TMPDIR>>` string with the path to your preprocessed input files; for
+   example:
 
-Can you even generate normalizations otherwise??
+   ```bash
+   sed -i 's|<<TMPDIR>>|./preprocessed|g' examples/xnmt-config.yaml
+   ```
+
+   For very small datasets, you might also want to increase the patience value
+   (find the line that says `patience: 5` and adjust it).
+
+Afterwards, you can train the model by calling:
+
+    PYTHONHASHSEED=0 python3 -m xnmt.xnmt_run_experiments xnmt-config.yaml --dynet-seed 0 --dynet--gpu
+
+This both trains and evaluates; the final predictions will be stored as
+`dev.predictions` in the given directory.
 
 
 ### Using cSMTiser
