@@ -1,11 +1,11 @@
 # Historical Text Normalization
 *Compiled tools, datasets, and other resources for historical text normalization.*
 
-The resources provided here have originally been used in the following
+The resources provided here have originally been published along with the following
 publication:
 
-+ Marcel Bollmann. 2019 (to appear). A Large-Scale Comparison of Historical Text
-  Normalization Systems. In *Proceedings of NAACL-HLT 2019.*
++ Marcel Bollmann. 2019 (to appear). [A Large-Scale Comparison of Historical Text
+  Normalization Systems](https://arxiv.org/abs/1904.02036). In *Proceedings of NAACL-HLT 2019.*
 
 If you use an original part of this repository (such as the provided scripts or
 the previously unpublished dataset splits), I would appreciate if you cite the
