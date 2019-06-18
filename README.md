@@ -4,8 +4,22 @@
 The resources provided here have originally been published along with the following
 publication:
 
-+ Marcel Bollmann. 2019 (to appear). [A Large-Scale Comparison of Historical Text
-  Normalization Systems](https://arxiv.org/abs/1904.02036). In *Proceedings of NAACL-HLT 2019.*
++ Marcel Bollmann. 2019. [A Large-Scale Comparison of Historical Text
+  Normalization Systems](http://www.aclweb.org/anthology/N19-1389). In
+  *Proceedings of NAACL-HLT 2019.*
+
+```
+@inproceedings{bollmann2019-largescale,
+  author = {Bollmann, Marcel},
+  title = {A Large-Scale Comparison of Historical Text Normalization Systems},
+  booktitle = {Proceedings of the 2019 Conference of the North {A}merican Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers)},
+  location = {Minneapolis, Minnesota},
+  publisher = {Association for Computational Linguistics},
+  year = {2019},
+  pages = {3885--3898},
+  url = {http://www.aclweb.org/anthology/N19-1389},
+}
+```
 
 If you use an original part of this repository (such as the provided scripts or
 the previously unpublished dataset splits), I would appreciate if you cite the
@@ -19,6 +33,11 @@ also be found in:
   Models](http://www.linguistics.rub.de/forschung/arbeitsberichte/22.pdf). *Bochumer
   Linguistische Arbeitsberichte*, 22.
 
+The following additional material is also available:
+
++ [**Table 6** with raw accuracy numbers](appendix-tab6.pdf) for the plots
+  provided in Figures 3 and 4 in [Bollmann
+  (2019)](http://www.aclweb.org/anthology/N19-1389).
 
 ## Datasets
 
