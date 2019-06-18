@@ -35,7 +35,7 @@ also be found in:
 
 The following additional material is also available:
 
-+ [**Table 6** with raw accuracy numbers](appendix-tab6.pdf) for the plots
++ [**Table 6** with raw accuracy numbers](appendix_tab6.pdf) for the plots
   provided in Figures 3 and 4 in [Bollmann
   (2019)](http://www.aclweb.org/anthology/N19-1389).
 
